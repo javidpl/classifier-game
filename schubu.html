@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schubu - Animal game</title>
+    <title>Classifier game</title>
     <style>
         body{
             background-color: lavender;
@@ -15,7 +15,7 @@
             display: flex;
             padding: 5px;
         }
-        .animals{
+        .cards{
             max-height: 100%;
             width: 100%;
             display: grid;
@@ -24,23 +24,25 @@
             align-items: center;
             justify-items: center;
         }
-        .classes{
+        .droppables{
             max-height: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
         }
-        .animal{
+        .card{
             height: 15vw;
             width: 15vw;
             max-width: 7rem;
             max-height: 7rem;
+            
         }
-        .animal img {
+        .card img {
             object-fit: cover;
             width: 100%;
             height: 100%;
             border-radius: 50%;
+            box-shadow: 0px 0px 0px 3px  #a69de1;
         }
         .blinking {
             animation: blink .2s alternate infinite;
@@ -48,7 +50,7 @@
         }
         @keyframes blink {
             from {opacity: 1;} 
-            to {opacity: 0;}
+            to {opacity: .5;}
         }
 
         .droppable {
@@ -110,7 +112,7 @@
 
         @media screen and (max-width: 654px){
 
-            .animal{
+            .card{
                 height: 5rem;
                 width: 5rem;
             }
@@ -118,6 +120,7 @@
     </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -125,10 +128,10 @@
             <p class="message"></p>
             <button class="restart">Restart</button>
         </div>
-        <div class="animals">
+        <div class="cards">
 
         </div>
-        <div class="classes">
+        <div class="droppables">
             <div id="mammals" class="mammals droppable">Säugetiere</div>
             <div id="reptiles" class="reptiles droppable">Reptilien</div>
             <div id="amphibians" class="amphibians droppable">Amphibien</div>
@@ -136,80 +139,94 @@
     </div>
     <script>
         
-        /*Object with classification of animals and their properties (currently only imgUrl)*/
+        /*Object with classification of cards and their properties (currently only imgUrl)*/
         const animals = {
-            mammals: {
-                dolphin: {
-                    imgUrl: 'https://live.staticflickr.com/4061/4589042409_fae70bb32f_b.jpg'
+            groups: {
+                mammals: {
+                    items: {
+                        dolphin: {
+                            imgUrl: 'https://live.staticflickr.com/4061/4589042409_fae70bb32f_b.jpg'
+                        },
+                        bear: {
+                            imgUrl: 'https://memegenerator.net/img/images/300x300/13692847.jpg'
+                        },
+                        mouse: {
+                            imgUrl: 'https://squeaksandnibbles.com/wp-content/uploads/2018/06/how-long-do-mice-live.jpg'
+                        }
+                    }
+
                 },
-                bear: {
-                    imgUrl: 'https://memegenerator.net/img/images/300x300/13692847.jpg'
+                reptiles: {
+                    items: {
+                        chameleon: {
+                            imgUrl: 'https://live.staticflickr.com/65535/48329213772_3819880e7f_z.jpg'
+                        },
+                        turtle: {
+                            imgUrl: 'https://cdn.rewild.org/2020/06/IMG_1109-1024x725.jpg'
+                        },
+                        crocodile: {
+                            imgUrl: 'https://assets.atlasobscura.com/media/W1siZiIsInVwbG9hZHMvYXNzZXRzLzMzOGVjMmMzMWQwNjFjMDU5NF84MDBweC1TYWx0d2F0ZXJfY3JvY29kaWxlLmpwZyJdLFsicCIsImNvbnZlcnQiLCItYXV0by1vcmllbnQgIl0sWyJwIiwidGh1bWIiLCI4MDB4NTMzKzArMzgiXSxbInAiLCJjb252ZXJ0IiwiLXF1YWxpdHkgODEgLWF1dG8tb3JpZW50Il0sWyJwIiwidGh1bWIiLCI3ODB4NTIwIyJdXQ'
+                        }
+                    }
+
                 },
-                mouse: {
-                    imgUrl: 'https://squeaksandnibbles.com/wp-content/uploads/2018/06/how-long-do-mice-live.jpg'
+                amphibians: {
+                    items: {
+                        salamander: {
+                            imgUrl: 'https://image.geo.de/30046012/t/Av/v3/w1440/r1/-/salamander-gross-jpg--19514-.jpg'
+                        },
+                        frog: {
+                            imgUrl: 'https://dr282zn36sxxg.cloudfront.net/datastreams/f-d%3A2f313cefad5bc1901b975a8c9089a645ed96708ebcf4a07f94872409%2BIMAGE_TINY%2BIMAGE_TINY.1'
+                        },
+                        axolotl: {
+                            imgUrl: 'https://images.immediate.co.uk/production/volatile/sites/4/2020/03/GettyImages-1058304880-c-0b54061-scaled.jpg?quality=90&resize=768%2C574'
+                        }
+                    }
+
                 }
-            },
-            reptiles: {
-                chameleon: {
-                    imgUrl: 'https://live.staticflickr.com/65535/48329213772_3819880e7f_z.jpg'
-                },
-                turtle: {
-                    imgUrl: 'https://cdn.rewild.org/2020/06/IMG_1109-1024x725.jpg'
-                },
-                crocodile: {
-                    imgUrl: 'https://assets.atlasobscura.com/media/W1siZiIsInVwbG9hZHMvYXNzZXRzLzMzOGVjMmMzMWQwNjFjMDU5NF84MDBweC1TYWx0d2F0ZXJfY3JvY29kaWxlLmpwZyJdLFsicCIsImNvbnZlcnQiLCItYXV0by1vcmllbnQgIl0sWyJwIiwidGh1bWIiLCI4MDB4NTMzKzArMzgiXSxbInAiLCJjb252ZXJ0IiwiLXF1YWxpdHkgODEgLWF1dG8tb3JpZW50Il0sWyJwIiwidGh1bWIiLCI3ODB4NTIwIyJdXQ'
-                }
-            },
-            amphibians: {
-                salamander: {
-                    imgUrl: 'https://image.geo.de/30046012/t/Av/v3/w1440/r1/-/salamander-gross-jpg--19514-.jpg'
-                },
-                frog: {
-                    imgUrl: 'https://dr282zn36sxxg.cloudfront.net/datastreams/f-d%3A2f313cefad5bc1901b975a8c9089a645ed96708ebcf4a07f94872409%2BIMAGE_TINY%2BIMAGE_TINY.1'
-                },
-                axolotl: {
-                    imgUrl: 'https://images.immediate.co.uk/production/volatile/sites/4/2020/03/GettyImages-1058304880-c-0b54061-scaled.jpg?quality=90&resize=768%2C574'
-                }
+
             }
+
         }
 
-
+        const gameObj = animals;
 
         /* Initialize pointcounters */
         let attempts = 0;
         let points = 0;
 
         /*Intantiate chips*/
-        function setup() {
-            const chipArr = [];
-            for (const animalClass of Object.keys(animals)) {
-                for (const species of Object.keys(animals[animalClass])) {
-                    const item = document.createElement("div");
-                    item.setAttribute("id", species);
+        function setup(gameObj) {
+            const {groups} = gameObj;
+            const cardArr = [];
+            for (const group of Object.keys(groups)) {
+                for (const item of Object.keys(groups[group].items)) {
+                    const div = document.createElement("div");
+                    div.setAttribute("id", item);
                     const image = document.createElement("img");
-                    image.src = animals[animalClass][species].imgUrl;
-                    $(item).append(image);
-                    item.classList.add("animal");
-                    chipArr.push(item);
+                    image.src = groups[group].items[item].imgUrl;
+                    $(div).append(image);
+                    div.classList = "card";
+                    cardArr.push(div);
                 }
             }
-            chipArr.sort(() => Math.random() - 0.5)
-            $(".animals").append(chipArr);
+            cardArr.sort(() => Math.random() - 0.5)
+            $(".cards").append(cardArr);
         }
-        setup();
+        setup(gameObj);
 
 
 
-        function drop (evt, ui) {
+        function drop (evt, ui ) {
             /* setup elements */
-            var chip = ui.draggable.context;
-            var correctList = Object.values(animals).find(classObj => Object.keys(classObj).includes(chip.id)); //find correct class family for dropped item
-            var correctClass = Object.keys(animals).find(key => animals[key] === correctList); //finde correct class in class family
-            var index = Object.keys(animals[correctClass]).findIndex(el => el === chip.id); //find index of animal in their class (for animation purpose only)
+            const {groups} = gameObj;
+            var card = ui.draggable.context;
+            var correctGroupName = Object.keys(groups).find(groupName => Object.keys(groups[groupName].items).includes(card.id)) //find the group name
+            var index = Object.keys(groups[correctGroupName].items).findIndex(item => item === card.id); //find index of card in their class (for animation purpose only)
 
 
             /* calculate position offsets for move animation */
-            var drop_el_offset = $(`#${correctClass}`).offset();
+            var drop_el_offset = $(`#${correctGroupName}`).offset();
             var drag_el_offset = ui.draggable.offset();
             var left_end = (drop_el_offset.left + ($(this).width() * ((index + 1) / 4))) - (drag_el_offset.left + (ui.draggable.width() / 2));
             var top_end = (drop_el_offset.top + ($(this).height() / 2)) - (drag_el_offset.top + (ui.draggable.height() / 2));
@@ -217,23 +234,24 @@
             
             /* evaluate if answer is correct or not and change style and counter */
             let waitForAnimation = 0;
-            const dropElList = Object.keys(animals[evt.target.id]);
-            if (dropElList.includes(chip.id)) {
-                chip.querySelector("img").style.boxShadow = "0px 0px 0px 2px rgba(0, 255, 0, 1)";
+            const dropElList = Object.keys(groups[evt.target.id].items);
+            if (dropElList.includes(card.id)) {
+                card.querySelector("img").style.boxShadow = "0px 0px 0px 3px limeGreen";
                 
                 points++;
             } else {
-                chip.querySelector("img").style.boxShadow = "0px 0px 0px 2px rgba(255, 0, 0, 1)";
-                chip.style.backgroundColor = "red";
-                chip.style.borderRadius = "50%";
-                chip.querySelector("img").classList.add("blinking");
+                card.querySelector("img").style.boxShadow = "0px 0px 0px 3px tomato";
+                card.style.backgroundColor = "tomato";
+                card.style.borderRadius = "50%";
+                card.querySelector("img").classList.add("blinking");
                 waitForAnimation = 1500;
             }
 
-            /* move the animal to its correspondent place*/
-            $(chip).draggable("disable");
+
+            /* move the card to its correspondent place*/
+            $(card).draggable("disable");
             setTimeout(() => {
-                $(chip).animate({
+                $(card).animate({
                     top: `+=${top_end}`,
                     left: `+=${left_end}`
                 }, 1000);
@@ -241,9 +259,9 @@
             
 
 
-            /* check when all the animals have been dropped */
+            /* check when all the cards have been dropped */
             attempts++;
-            if (attempts === 3) { //$(".animal").length
+            if (attempts === 3) { //$(".card").length
                 $(".display").css("visibility", "visible")
                 if (points === attempts) {
                     $(".message").css("color", 'rgb(50, 114, 46)');
@@ -259,7 +277,7 @@
         
         /* Configurate draggable and droppable items & evaluate items when dropped */
         function setInteractions() {
-            $(".animal").draggable({
+            $(".card").draggable({
                 containment: ".container"
             });
 
@@ -272,8 +290,8 @@
 
         /* Restart game when restart button clicked */ 
         function restart(){
-            $(".animal").remove();
-            setup();
+            $(".card").remove();
+            setup(gameObj);
             setInteractions();
             $(".display").css("visibility","hidden");
             $(".message").html("");
