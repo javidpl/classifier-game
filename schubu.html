@@ -31,17 +31,16 @@
             flex-direction: column;
         }
         .card{
-            height: 15vw;
-            width: 15vw;
+            height: 12vw;
+            width: 12vw;
             max-width: 7rem;
             max-height: 7rem;
-            
         }
         .card img {
             object-fit: cover;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            border-radius: 7px;
             box-shadow: 0px 0px 0px 3px  #a69de1;
         }
         .blinking {
@@ -57,7 +56,7 @@
             box-sizing: border-box;
             width: 97%;
             height: 97%;
-            border-radius: 10px;
+            border-radius: 7px;
             margin: 5px;
             padding: 5px;
             color:white;
@@ -185,7 +184,6 @@
                     }
 
                 }
-
             }
 
         }
@@ -231,18 +229,21 @@
 
         function drop (evt, ui ) {
             /* setup elements */
+            
+
             const {groups} = gameObj;
             var card = ui.draggable.context;
             var correctGroupName = Object.keys(groups).find(groupName => Object.keys(groups[groupName].items).includes(card.id)) //find the group name
             var index = Object.keys(groups[correctGroupName].items).findIndex(item => item === card.id); //find index of card in their class (for animation purpose only)
 
-
+            $(card).draggable("disable");
             /* calculate position offsets for move animation */
             var drop_el_offset = $(`#${correctGroupName}`).offset();
             var drag_el_offset = ui.draggable.offset();
             var left_end = (drop_el_offset.left + ($(this).width() * ((index + 1) / 4))) - (drag_el_offset.left + (ui.draggable.width() / 2));
             var top_end = (drop_el_offset.top + ($(this).height() / 2)) - (drag_el_offset.top + (ui.draggable.height() / 2));
 
+           
             
             /* evaluate if answer is correct or not and change style and counter */
             let waitForAnimation = 0;
@@ -254,21 +255,19 @@
             } else {
                 card.querySelector("img").style.boxShadow = "0px 0px 0px 3px tomato";
                 card.style.backgroundColor = "tomato";
-                card.style.borderRadius = "50%";
+                
                 card.querySelector("img").classList.add("blinking");
                 waitForAnimation = 1500;
             }
 
 
             /* move the card to its correspondent place*/
-            $(card).draggable("disable");
             setTimeout(() => {
                 $(card).animate({
                     top: `+=${top_end}`,
                     left: `+=${left_end}`
                 }, 1000);
             }, waitForAnimation);
-            
 
 
             /* check when all the cards have been dropped */
@@ -284,13 +283,21 @@
                 }
             }
             
+            $(card).draggable({revert: false});
         }
-        
+        $(window).resize(function() {
+            //console.log( $(".card").offset().left*($(window).width()/$("card").offset().left));
+            $(".card").offset({
+             
+            });
+
+        });
         
         /* Configurate draggable and droppable items & evaluate items when dropped */
         function setInteractions() {
             $(".card").draggable({
-                containment: ".container"
+                containment: ".container",
+                revert: true
             });
 
             $(".droppable").droppable({
