@@ -132,9 +132,7 @@
 
         </div>
         <div class="droppables">
-            <div id="mammals" class="mammals droppable">Säugetiere</div>
-            <div id="reptiles" class="reptiles droppable">Reptilien</div>
-            <div id="amphibians" class="amphibians droppable">Amphibien</div>
+           
         </div>
     </div>
     <script>
@@ -143,6 +141,7 @@
         const animals = {
             groups: {
                 mammals: {
+                    color: 'rgb(255, 205, 172)',
                     items: {
                         dolphin: {
                             imgUrl: 'https://live.staticflickr.com/4061/4589042409_fae70bb32f_b.jpg'
@@ -157,6 +156,7 @@
 
                 },
                 reptiles: {
+                    color: 'lightgreen',
                     items: {
                         chameleon: {
                             imgUrl: 'https://live.staticflickr.com/65535/48329213772_3819880e7f_z.jpg'
@@ -171,6 +171,7 @@
 
                 },
                 amphibians: {
+                    color: 'lightblue',
                     items: {
                         salamander: {
                             imgUrl: 'https://image.geo.de/30046012/t/Av/v3/w1440/r1/-/salamander-gross-jpg--19514-.jpg'
@@ -201,17 +202,28 @@
             const cardArr = [];
             for (const group of Object.keys(groups)) {
                 for (const item of Object.keys(groups[group].items)) {
-                    const div = document.createElement("div");
-                    div.setAttribute("id", item);
+                    const cardDiv = document.createElement("div");
+                    cardDiv.setAttribute("id", item);
                     const image = document.createElement("img");
                     image.src = groups[group].items[item].imgUrl;
-                    $(div).append(image);
-                    div.classList = "card";
-                    cardArr.push(div);
+                    $(cardDiv).append(image);
+                    cardDiv.classList = "card";
+                    cardArr.push(cardDiv);
                 }
             }
             cardArr.sort(() => Math.random() - 0.5)
             $(".cards").append(cardArr);
+
+            const dropArr = [];
+            Object.keys(groups).forEach(group => {
+                const dropDiv = document.createElement("div");
+                dropDiv.setAttribute("id", group);
+                dropDiv.classList = `${group} droppable`;
+                dropDiv.style.background = groups[group].color;
+                dropDiv.innerHTML = group;
+                dropArr.push(dropDiv);
+            })
+            $(".droppables").append(dropArr);
         }
         setup(gameObj);
 
@@ -291,6 +303,7 @@
         /* Restart game when restart button clicked */ 
         function restart(){
             $(".card").remove();
+            $(".droppable").remove();
             setup(gameObj);
             setInteractions();
             $(".display").css("visibility","hidden");
