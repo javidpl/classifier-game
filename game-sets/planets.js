@@ -3,6 +3,8 @@
 const planets = {
     groups: {
         terrestrial: {
+            title: 'Terrestrischen Planeten',
+            background: 'lightgreen',
             items: {
                 Mercury: {
                     title: 'Merkur',
@@ -23,6 +25,8 @@ const planets = {
             }
         },
         jovian: {
+            title: 'Gas Planeten',
+            background: 'lightblue',
             items: {
                 Jupiter: {
                     title: 'Jupiter',

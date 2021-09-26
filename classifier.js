@@ -39,17 +39,17 @@ function drop (evt, ui ) {
     
     /* setup elements */
     const {groups} = gameSet;
-    var card = ui.draggable.context;
-    var correctGroupName = Object.keys(groups).find(groupName => Object.keys(groups[groupName].items).includes(card.id)) //find the group name
-    var index = Object.keys(groups[correctGroupName].items).findIndex(item => item === card.id); //find index of card in their class (for animation purpose only)
-
+    let card = ui.draggable.context;
+    let correctGroupName = Object.keys(groups).find(groupName => Object.keys(groups[groupName].items).includes(card.id)) //find the group name
+    let index = Object.keys(groups[correctGroupName].items).findIndex(item => item === card.id); //find index of card in their class (for animation purpose only)
+    let groupLength = Object.keys(groups[correctGroupName].items).length+1; // get group length for fixing position in droppable
 
     $(card).draggable("disable");
     /* calculate position offsets for move animation */
-    var drop_el_offset = $(`#${correctGroupName}`).offset();
-    var drag_el_offset = ui.draggable.offset();
-    var left_end = (drop_el_offset.left + ($(this).width() * ((index + 1) / 4))) - (drag_el_offset.left + (ui.draggable.width() / 2));
-    var top_end = (drop_el_offset.top + ($(this).height() / 2)) - (drag_el_offset.top + (ui.draggable.height() / 2))+10;
+    let drop_el_offset = $(`#${correctGroupName}`).offset();
+    let drag_el_offset = ui.draggable.offset();
+    let left_end = (drop_el_offset.left + ($(this).width() * ((index + 1) / groupLength ))) - (drag_el_offset.left + (ui.draggable.width() / 2));
+    let top_end = (drop_el_offset.top + ($(this).height() / 2)) - (drag_el_offset.top + (ui.draggable.height() / 2))+10;
 
     
     
@@ -63,7 +63,7 @@ function drop (evt, ui ) {
     } else {
         card.querySelector("img").style.boxShadow = "0px 0px 0px 3px tomato";
         card.style.backgroundColor = "tomato";
-        
+        card.style.borderRadius = "50%";
         card.querySelector("img").classList.add("blinking");
         waitForAnimation = 1500;
     }
@@ -80,7 +80,7 @@ function drop (evt, ui ) {
 
     /* check when all the cards have been dropped */
     attempts++;
-    if (attempts === 3) { //$(".card").length
+    if (attempts === $(".card").length) { //$(".card").length
         $(".display").css("visibility", "visible")
         if (points === attempts) {
             $(".message").css("color", 'rgb(50, 114, 46)');
@@ -113,7 +113,7 @@ setInteractions();
 function restart(){
     $(".card").remove();
     $(".droppable").remove();
-    setup(gameObj);
+    setup(gameSet);
     setInteractions();
     $(".display").css("visibility","hidden");
     $(".message").html("");
