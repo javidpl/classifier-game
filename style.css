@@ -1,7 +1,7 @@
 body{
     background-color: lavender;
 }
-.container{
+.classifier-container{
     max-width: 800px;
     width: 100%;
     min-width: 500px;
@@ -10,6 +10,7 @@ body{
     background-color: whitesmoke;  
     display: flex;
     padding: 5px;
+    border-radius: 7px;
 }
 .cards{
     max-height: 100%;
@@ -32,15 +33,36 @@ body{
     width: 12vw;
     max-width: 6rem;
     max-height: 6rem;
+    text-align: center;
 }
 .card img {
     object-fit: cover;
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    box-shadow: 0px 0px 0px 3px  #a69de1;
+    box-shadow: 0px 0px 0px 3px  #715edd;
 
 }
+.label{
+    display: inline-block;
+    background-color: #715edd;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: white;
+    border-radius: 10px;
+    padding: 0 7px 0 7px;
+}
+
+.ui-draggable-dragging{
+    z-index: 1;
+}
+.ui-draggable-dragging .label{
+    display: none;
+}
+.ui-draggable-disabled .label{
+    display: none;
+}
+
 .blinking {
     animation: blink .2s alternate infinite;
     animation-iteration-count: 6;
@@ -103,5 +125,8 @@ body{
     .card{
         height: 5rem;
         width: 5rem;
+    }
+    .label{
+        font-size: 12px;
     }
 }

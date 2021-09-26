@@ -1,5 +1,6 @@
 /*Object with classification of cards and their properties (currently only imgUrl)*/
 const animals = {
+    background: 'url("https://i.pinimg.com/originals/07/d8/67/07d867d81eab5a0a0c8489d59ed4696c.jpg")',
     groups: {
         mammals: {
             title : 'Säugetiere',

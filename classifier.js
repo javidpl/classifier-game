@@ -4,16 +4,21 @@ let points = 0;
 
 /*Intantiate chips*/
 function setup(gameObj) {
+    $('.classifier-container').css("background",gameObj.background)
     const {groups} = gameObj;
     const cardArr = [];
     for (const group of Object.keys(groups)) {
         for (const item of Object.keys(groups[group].items)) {
             const cardDiv = document.createElement("div");
             cardDiv.setAttribute("id", item);
+            cardDiv.classList = "card";
             const image = document.createElement("img");
             image.src = groups[group].items[item].imgUrl;
             $(cardDiv).append(image);
-            cardDiv.classList = "card";
+            const label = document.createElement("div");
+            label.classList = "label";
+            label.innerText = groups[group].items[item].title;
+            $(cardDiv).append(label);
             cardArr.push(cardDiv);
         }
     }
@@ -45,6 +50,7 @@ function drop (evt, ui ) {
     let groupLength = Object.keys(groups[correctGroupName].items).length+1; // get group length for fixing position in droppable
 
     $(card).draggable("disable");
+    $('.classifier-container').css("width","+=0px");
     /* calculate position offsets for move animation */
     let drop_el_offset = $(`#${correctGroupName}`).offset();
     let drag_el_offset = ui.draggable.offset();
@@ -98,10 +104,9 @@ function drop (evt, ui ) {
 /* Configurate draggable and droppable items & evaluate items when dropped */
 function setInteractions() {
     $(".card").draggable({
-        containment: ".container",
-        revert: true
+        containment: ".classifier-container",
+        revert: true,
     });
-
     $(".droppable").droppable({
         drop: drop
     });
