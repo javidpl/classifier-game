@@ -50,7 +50,7 @@ function drop (evt, ui ) {
     let groupLength = Object.keys(groups[correctGroupName].items).length+1; // get group length for fixing position in droppable
 
     $(card).draggable("disable");
-    $('.classifier-container').css("width","+=0px");
+    $('.classifier-container').css("width","+=0px"); //fix container width to avoid card position issues on resize
     /* calculate position offsets for move animation */
     let drop_el_offset = $(`#${correctGroupName}`).offset();
     let drag_el_offset = ui.draggable.offset();

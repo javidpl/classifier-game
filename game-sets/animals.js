@@ -4,7 +4,7 @@ const animals = {
     groups: {
         mammals: {
             title : 'Säugetiere',
-            background: 'rgb(255, 205, 172)',
+            background: 'lightsalmon',
             items: {
                 dolphin: {
                     title: "Delphin",
@@ -23,7 +23,7 @@ const animals = {
         },
         reptiles: {
             title : 'Reptilien',
-            background: 'lightgreen',
+            background: 'mediumturquoise',
             items: {
                 chameleon: {
                     title: "Chamäleon",
@@ -42,7 +42,7 @@ const animals = {
         },
         amphibians: {
             title: 'Amphibien',
-            background: 'lightblue',
+            background: 'gold',
             items: {
                 salamander: {
                     title: "Salamander",

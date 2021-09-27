@@ -1,11 +1,9 @@
-
-
 const planets = {
     background : 'url("https://cdn.pixabay.com/photo/2019/01/02/02/37/background-3907905_1280.jpg")',
     groups: {
         terrestrial: {
             title: 'Terrestrischen Planeten',
-            background: 'rgb(255, 205, 172)',
+            background: 'rgb(255, 100, 100, .5)',
             items: {
                 Mercury: {
                     title: 'Merkur',
@@ -27,7 +25,7 @@ const planets = {
         },
         jovian: {
             title: 'Gas Planeten',
-            background: 'lightblue',
+            background: 'rgba(100,100,255, .5)',
             items: {
                 Jupiter: {
                     title: 'Jupiter',
