@@ -56,6 +56,9 @@ body{
 .ui-draggable-dragging{
     z-index: 1;
 }
+.ui-draggable-dragging img{
+    box-shadow: 5px 5px 5px rgba(63, 50, 50, 0.6);
+}
 .ui-draggable-dragging .label{
     display: none;
 }
